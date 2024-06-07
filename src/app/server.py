@@ -2,15 +2,21 @@ import sys
 import os
 import pathlib
 import argparse
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from langserve import add_routes
 
 sys.path.append(pathlib.Path(__file__).resolve().parent)
 from chain import RAGChain
 
+
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
 
 # Set all CORS enabled origins
 app.add_middleware(
@@ -23,9 +29,11 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def redirect_root_to_docs():
-    return RedirectResponse("/question/playground")
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="index.html", context={"id": "hello"}
+    )
 
 
 def get_args():

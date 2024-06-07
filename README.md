@@ -32,5 +32,11 @@ python src/app/server.py \
     --hf_token <huggingface_access_token>
 ```
 
-## 4. Test with langservep playground
-- http://127.0.0.1:18080/question/playground/
+## 4. Test RAG
+- Test with langservep playground
+    - http://127.0.0.1:18080/question/playground
+- Test with chat UI
+    - http://127.0.0.1:18080
+
+## 5. Demo
+![demo](./images/wikibot-demo-20240607.gif)
