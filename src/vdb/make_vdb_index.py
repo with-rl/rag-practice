@@ -11,7 +11,7 @@ def get_args():
     p = argparse.ArgumentParser()
 
     p.add_argument("--dump_file", type=str, default="data/kowiki_dump.txt")
-    p.add_argument("--vdb_index", type=str, default="data/kowiki_vdb")
+    p.add_argument("--vdb_index", type=str, default="data/faiss_kowiki_vdb")
     p.add_argument(
         "--context_embedding_id",
         type=str,

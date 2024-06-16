@@ -10,7 +10,7 @@ from fastapi.templating import Jinja2Templates
 from langserve import add_routes
 
 sys.path.append(pathlib.Path(__file__).resolve().parent)
-from chain import RAGChain
+from chain import FAISSChain, MilvusChain
 
 
 app = FastAPI()
@@ -31,16 +31,15 @@ app.add_middleware(
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse(
-        request=request, name="index.html", context={"id": "hello"}
-    )
+    return templates.TemplateResponse(request=request, name="index.html")
 
 
 def get_args():
     p = argparse.ArgumentParser()
 
     p.add_argument("--hf_token", type=str, required=True)
-    p.add_argument("--vdb_index", type=str, default="data/kowiki_vdb")
+    p.add_argument("--faiss_vdb_index", type=str, default="data/faiss_kowiki_vdb")
+    p.add_argument("--milvus_vdb_index", type=str, default="data/milvus_kowiki_vdb")
     p.add_argument(
         "--question_embedding_id",
         type=str,
@@ -63,7 +62,8 @@ def main(args):
     os.environ["HUGGINGFACEHUB_API_TOKEN"] = args.hf_token
     add_routes(
         app,
-        RAGChain(args).chain,
+        # FAISSChain(args).chain,
+        MilvusChain(args).chain,
         path="/question",
         enable_feedback_endpoint=True,
         enable_public_trace_link_endpoint=True,
